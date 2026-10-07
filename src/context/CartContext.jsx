@@ -14,8 +14,6 @@ export function CartProvider({ children }) {
     }
   });
 
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
 
   useEffect(() => {
@@ -43,7 +41,7 @@ export function CartProvider({ children }) {
       }
       return [...prev, { ...product, quantity }];
     });
-    showToast(`¡${product.name} añadido al carrito! 🛒`);
+    showToast(`¡${product.name} añadido al carrito!`);
   };
 
   const removeFromCart = (productId) => {
@@ -80,10 +78,6 @@ export function CartProvider({ children }) {
         clearCart,
         cartTotal,
         cartCount,
-        isCartOpen,
-        setIsCartOpen,
-        isCheckoutOpen,
-        setIsCheckoutOpen,
         toastMessage
       }}
     >

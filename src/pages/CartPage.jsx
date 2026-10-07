@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, ArrowLeft, Trash2, Plus, Minus, ShieldCheck, Truck, MessageCircle, Tag, CheckCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ShoppingBag, ArrowLeft, Trash2, Plus, Minus, ShieldCheck, Truck, MessageCircle, Tag, CheckCircle2, MapPin, CreditCard, User, Phone, FileText } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatCurrency } from '../utils/formatCurrency';
-import { COMPANY_INFO } from '../config/constants';
+import { formatWhatsAppMessage } from '../utils/formatWhatsAppMessage';
 
 export function CartPage() {
-  const { cartItems, updateQuantity, removeFromCart, cartTotal, clearCart, setIsCheckoutOpen } = useCart();
-  const navigate = useNavigate();
+  const { cartItems, updateQuantity, removeFromCart, cartTotal, clearCart } = useCart();
+
+  // Estado del Formulario de Entrega embebido en la página
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    address: 'Alto Barinas, Barinas',
+    paymentMethod: 'Pago Móvil',
+    notes: ''
+  });
 
   const [couponCode, setCouponCode] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -29,6 +37,18 @@ export function CartPage() {
 
   const finalTotal = Math.max(0, cartTotal - discount);
 
+  const handleCompleteOrder = (e) => {
+    e.preventDefault();
+    if (!formData.name.trim()) {
+      alert('Por favor, ingresa tu nombre completo para continuar.');
+      return;
+    }
+
+    const whatsappUrl = formatWhatsAppMessage(cartItems, formData, finalTotal + (isFreeShipping ? 0 : 2.00));
+    window.open(whatsappUrl, '_blank');
+    clearCart();
+  };
+
   return (
     <div className="bg-gray-50/70 min-h-screen py-8 pb-24">
       <div className="container mx-auto px-4 max-w-6xl">
@@ -47,33 +67,33 @@ export function CartPage() {
           <div>
             <h1 className="text-xl md:text-2xl font-extrabold text-gray-900 flex items-center gap-2.5">
               <ShoppingBag className="text-green-600" size={26} />
-              <span>Mi Carrito de Compras</span>
+              <span>Mi Carrito y Proceso de Compra</span>
             </h1>
             <p className="text-xs text-gray-500 mt-1">
-              Revisa tus productos seleccionados y confirma tu entrega en Alto Barinas
+              Revisa tus productos y completa tus datos de envío directamente en esta página
             </p>
           </div>
 
-          {/* Indicadores de Pasos */}
+          {/* Indicadores de Pasos en la Página */}
           <div className="flex items-center gap-2 text-xs font-bold">
             <span className="bg-green-600 text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
               <span className="w-5 h-5 rounded-full bg-white text-green-700 flex items-center justify-center text-[11px] font-extrabold">1</span>
-              <span>Mi Carrito</span>
+              <span>Productos</span>
             </span>
             <span className="text-gray-300">→</span>
-            <span className="bg-gray-100 text-gray-500 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-              <span className="w-5 h-5 rounded-full bg-gray-300 text-gray-700 flex items-center justify-center text-[11px] font-extrabold">2</span>
+            <span className="bg-green-600 text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
+              <span className="w-5 h-5 rounded-full bg-white text-green-700 flex items-center justify-center text-[11px] font-extrabold">2</span>
               <span>Datos Entrega</span>
             </span>
             <span className="text-gray-300">→</span>
-            <span className="bg-gray-100 text-gray-500 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-              <span className="w-5 h-5 rounded-full bg-gray-300 text-gray-700 flex items-center justify-center text-[11px] font-extrabold">3</span>
+            <span className="bg-emerald-600 text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
+              <span className="w-5 h-5 rounded-full bg-white text-emerald-700 flex items-center justify-center text-[11px] font-extrabold">3</span>
               <span>WhatsApp</span>
             </span>
           </div>
         </div>
 
-        {/* Notificación de Envío Express Estilo Farmatodo */}
+        {/* Banner de Despacho Express */}
         <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-2xl p-4 shadow-md mb-8 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/20 rounded-xl">
@@ -114,15 +134,18 @@ export function CartPage() {
             </Link>
           </div>
         ) : (
-          /* Grid del Carrito (Tabla a la izquierda, resumen a la derecha) */
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          /* Grid del Carrito y Formulario Embebido en la Página */
+          <form onSubmit={handleCompleteOrder} className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             
-            {/* Lista Detallada de Productos (2 Columnas) */}
-            <div className="lg:col-span-2 space-y-4">
-              <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm divide-y divide-gray-100">
-                <div className="pb-4 flex justify-between items-center text-xs text-gray-400 font-bold uppercase tracking-wider">
-                  <span>Producto ({cartItems.length})</span>
+            {/* Columna Izquierda: Lista de Productos + Formulario Embebido */}
+            <div className="lg:col-span-2 space-y-6">
+              
+              {/* Bloque 1: Lista de Productos */}
+              <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm space-y-4">
+                <div className="pb-3 border-b border-gray-100 flex justify-between items-center text-xs text-gray-400 font-bold uppercase tracking-wider">
+                  <span>1. Productos Seleccionados ({cartItems.length})</span>
                   <button
+                    type="button"
                     onClick={clearCart}
                     className="text-red-500 hover:text-red-700 flex items-center gap-1 font-semibold normal-case"
                   >
@@ -130,73 +153,167 @@ export function CartPage() {
                   </button>
                 </div>
 
-                {cartItems.map((item) => (
-                  <div key={item.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    
-                    {/* Info de Producto */}
-                    <div className="flex items-center gap-3.5">
-                      <img
-                        src={item.images[0]}
-                        alt={item.name}
-                        className="w-16 h-16 object-cover rounded-2xl border border-gray-100 shrink-0"
-                      />
-                      <div>
-                        <span className="text-[10px] font-extrabold text-green-700 bg-green-50 px-2.5 py-0.5 rounded-full border border-green-200">
-                          {item.categoryName}
-                        </span>
-                        <h3 className="text-sm font-bold text-gray-900 mt-1 line-clamp-1">{item.name}</h3>
-                        <p className="text-xs text-gray-500 font-medium">
-                          {formatCurrency(item.price)} por {item.unit}
-                        </p>
+                <div className="divide-y divide-gray-100">
+                  {cartItems.map((item) => (
+                    <div key={item.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      
+                      <div className="flex items-center gap-3.5">
+                        <img
+                          src={item.images[0]}
+                          alt={item.name}
+                          className="w-16 h-16 object-cover rounded-2xl border border-gray-100 shrink-0"
+                        />
+                        <div>
+                          <span className="text-[10px] font-extrabold text-green-700 bg-green-50 px-2.5 py-0.5 rounded-full border border-green-200">
+                            {item.categoryName}
+                          </span>
+                          <h3 className="text-sm font-bold text-gray-900 mt-1 line-clamp-1">{item.name}</h3>
+                          <p className="text-xs text-gray-500 font-medium">
+                            {formatCurrency(item.price)} por {item.unit}
+                          </p>
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Selector de Cantidad + Subtotal */}
-                    <div className="flex items-center justify-between sm:justify-end gap-4">
-                      <div className="flex items-center border border-gray-200 rounded-xl bg-gray-50 p-1">
+                      <div className="flex items-center justify-between sm:justify-end gap-4">
+                        <div className="flex items-center border border-gray-200 rounded-xl bg-gray-50 p-1">
+                          <button
+                            type="button"
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            className="w-7 h-7 flex items-center justify-center bg-white hover:bg-gray-100 text-gray-700 font-bold rounded-lg shadow-2xs transition-colors"
+                          >
+                            <Minus size={13} />
+                          </button>
+                          <span className="px-3 text-xs font-bold text-gray-900">{item.quantity}</span>
+                          <button
+                            type="button"
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            className="w-7 h-7 flex items-center justify-center bg-white hover:bg-gray-100 text-gray-700 font-bold rounded-lg shadow-2xs transition-colors"
+                          >
+                            <Plus size={13} />
+                          </button>
+                        </div>
+
+                        <div className="text-right min-w-[80px]">
+                          <span className="text-sm font-extrabold text-gray-900 block">
+                            {formatCurrency(item.price * item.quantity)}
+                          </span>
+                        </div>
+
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="w-7 h-7 flex items-center justify-center bg-white hover:bg-gray-100 text-gray-700 font-bold rounded-lg shadow-2xs transition-colors"
+                          type="button"
+                          onClick={() => removeFromCart(item.id)}
+                          className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                          title="Eliminar producto"
                         >
-                          <Minus size={13} />
-                        </button>
-                        <span className="px-3 text-xs font-bold text-gray-900">{item.quantity}</span>
-                        <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-7 h-7 flex items-center justify-center bg-white hover:bg-gray-100 text-gray-700 font-bold rounded-lg shadow-2xs transition-colors"
-                        >
-                          <Plus size={13} />
+                          <Trash2 size={18} />
                         </button>
                       </div>
 
-                      <div className="text-right min-w-[80px]">
-                        <span className="text-sm font-extrabold text-gray-900 block">
-                          {formatCurrency(item.price * item.quantity)}
-                        </span>
-                      </div>
-
-                      <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="p-2 text-gray-400 hover:text-red-600 transition-colors"
-                        title="Eliminar producto"
-                      >
-                        <Trash2 size={18} />
-                      </button>
                     </div>
-
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
+
+              {/* Bloque 2: Formulario de Datos de Entrega Integrado en la Página (Sin Modales) */}
+              <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm space-y-4">
+                <div className="pb-3 border-b border-gray-100">
+                  <h3 className="text-sm font-extrabold text-gray-900 flex items-center gap-2 uppercase tracking-wider">
+                    <MapPin className="text-green-600" size={18} />
+                    <span>2. Datos de Entrega y Pago (Alto Barinas)</span>
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Ingresa tus datos para generar el pedido directo a nuestro WhatsApp
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1 flex items-center gap-1">
+                      <User size={13} className="text-green-600" />
+                      <span>Nombre Completo *</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ej. María Pérez"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs focus:bg-white focus:border-green-600 transition-all font-medium"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1 flex items-center gap-1">
+                      <Phone size={13} className="text-green-600" />
+                      <span>Teléfono de Contacto</span>
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="Ej. 0414-1234567"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs focus:bg-white focus:border-green-600 transition-all font-medium"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block font-bold text-gray-700 mb-1 flex items-center gap-1">
+                      <MapPin size={13} className="text-green-600" />
+                      <span>Dirección Exacta de Entrega en Barinas</span>
+                    </label>
+                    <textarea
+                      rows={2}
+                      placeholder="Ej. Urb. Alto Barinas Norte, Calle principal, Casa #45"
+                      value={formData.address}
+                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs focus:bg-white focus:border-green-600 transition-all resize-none font-medium"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1 flex items-center gap-1">
+                      <CreditCard size={13} className="text-green-600" />
+                      <span>Método de Pago Preferido</span>
+                    </label>
+                    <select
+                      value={formData.paymentMethod}
+                      onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs focus:bg-white focus:border-green-600 transition-all font-medium"
+                    >
+                      <option value="Pago Móvil">📱 Pago Móvil</option>
+                      <option value="Zelle">💵 Zelle</option>
+                      <option value="Efectivo en Divisas">💵 Efectivo al recibir (Divisas / USD)</option>
+                      <option value="Transferencia Bancaria">🏦 Transferencia Bancaria</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1 flex items-center gap-1">
+                      <FileText size={13} className="text-green-600" />
+                      <span>Notas Adicionales (Opcional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ej. Por favor picar la carne en bistec delgado"
+                      value={formData.notes}
+                      onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs focus:bg-white focus:border-green-600 transition-all font-medium"
+                    />
+                  </div>
+                </div>
+
+              </div>
+
             </div>
 
-            {/* Resumen del Pedido (1 Columna en Desktop) */}
+            {/* Resumen del Pedido (Columna Derecha en la Página) */}
             <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-lg space-y-6 sticky top-24">
               <h2 className="text-base font-extrabold text-gray-900 border-b border-gray-100 pb-3">
-                Resumen del Pedido
+                3. Resumen y Confirmación
               </h2>
 
               {/* Formulario de Cupón de Descuento */}
-              <form onSubmit={handleApplyCoupon} className="space-y-2">
+              <div className="space-y-2">
                 <label className="block text-xs font-bold text-gray-700 flex items-center gap-1.5">
                   <Tag size={14} className="text-green-600" />
                   <span>Código de Descuento</span>
@@ -210,7 +327,8 @@ export function CartPage() {
                     className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs focus:bg-white focus:border-green-600 uppercase font-bold"
                   />
                   <button
-                    type="submit"
+                    type="button"
+                    onClick={handleApplyCoupon}
                     className="bg-gray-900 hover:bg-gray-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-colors"
                   >
                     Aplicar
@@ -221,12 +339,12 @@ export function CartPage() {
                     <CheckCircle2 size={13} /> ¡10% de descuento aplicado con éxito!
                   </p>
                 )}
-              </form>
+              </div>
 
               {/* Desglose Financiero */}
               <div className="space-y-2 text-xs pt-2 border-t border-gray-100">
                 <div className="flex justify-between text-gray-600">
-                  <span>Subtotal de Productos</span>
+                  <span>Subtotal ({cartItems.length} productos)</span>
                   <span className="font-semibold text-gray-900">{formatCurrency(cartTotal)}</span>
                 </div>
 
@@ -245,28 +363,28 @@ export function CartPage() {
                 </div>
 
                 <div className="flex justify-between text-base font-black text-gray-900 pt-3 border-t border-gray-200">
-                  <span>Total Final</span>
+                  <span>Total Final a Pagar</span>
                   <span className="text-green-700 text-xl">{formatCurrency(finalTotal + (isFreeShipping ? 0 : 2.00))}</span>
                 </div>
               </div>
 
-              {/* Botón Principal de Checkout por WhatsApp */}
+              {/* Botón Principal Integrado en la Página (Sin Popups) */}
               <button
-                onClick={() => setIsCheckoutOpen(true)}
-                style={{ backgroundColor: '#58A618' }}
-                className="w-full hover:bg-green-600 text-white font-bold text-xs md:text-sm py-4 px-4 rounded-2xl shadow-lg hover:shadow-green-600/30 transition-all flex items-center justify-center gap-2"
+                type="submit"
+                style={{ backgroundColor: '#25D366' }}
+                className="w-full hover:brightness-105 text-white font-bold text-xs md:text-sm py-4 px-4 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
               >
                 <MessageCircle size={20} />
-                <span>Proceder al Checkout por WhatsApp</span>
+                <span>Enviar Pedido por WhatsApp</span>
               </button>
 
               <div className="flex items-center justify-center gap-1.5 text-[11px] text-gray-500 text-center">
                 <ShieldCheck size={14} className="text-green-600" />
-                <span>Atención personalizada e inmediata en Barinas</span>
+                <span>Tu pedido se enviará listo para despacho a Alimentos La Rosaliera</span>
               </div>
             </div>
 
-          </div>
+          </form>
         )}
 
       </div>

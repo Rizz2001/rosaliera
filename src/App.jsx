@@ -4,7 +4,6 @@ import { CartProvider, useCart } from './context/CartContext';
 import { Navbar } from './components/layout/Navbar';
 import { MobileBottomNav } from './components/layout/MobileBottomNav';
 import { Footer } from './components/layout/Footer';
-import { CheckoutModal } from './components/checkout/CheckoutModal';
 import { HomePage } from './pages/HomePage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { CategoryPage } from './pages/CategoryPage';
@@ -48,7 +47,6 @@ function AppContent() {
         </Routes>
       </div>
 
-      <CheckoutModal />
       <ToastContainer />
       <MobileBottomNav />
       <Footer />
