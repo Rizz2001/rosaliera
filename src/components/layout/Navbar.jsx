@@ -166,6 +166,15 @@ export function Navbar({ searchQuery, setSearchQuery }) {
               </Link>
             );
           })}
+
+          <div className="flex items-center gap-4 border-l border-gray-200 pl-4 ml-auto shrink-0">
+            <Link to="/nosotros" className="hover:text-green-600 transition-colors whitespace-nowrap font-bold text-gray-700">
+              Nosotros
+            </Link>
+            <Link to="/faq" className="hover:text-green-600 transition-colors whitespace-nowrap font-bold text-gray-700">
+              Preguntas Frecuentes
+            </Link>
+          </div>
         </div>
       </nav>
 

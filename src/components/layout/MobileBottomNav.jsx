@@ -1,20 +1,19 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Grid, ShoppingBag, MessageCircle } from 'lucide-react';
+import { Home, Grid, ShoppingBag, Info, HelpCircle } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-import { COMPANY_INFO } from '../../config/constants';
 
 export function MobileBottomNav() {
   const { cartCount } = useCart();
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-200 px-4 py-2 flex items-center justify-around shadow-lg">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-200 px-3 py-2 flex items-center justify-around shadow-lg">
       {/* Botón Inicio */}
       <NavLink
         to="/"
         className={({ isActive }) =>
-          `flex flex-col items-center gap-1 text-[11px] font-semibold transition-colors ${
-            isActive ? 'text-green-700 font-bold' : 'text-gray-500 hover:text-gray-900'
+          `flex flex-col items-center gap-1 text-[10px] font-semibold transition-colors ${
+            isActive ? 'text-green-700 font-extrabold' : 'text-gray-500 hover:text-gray-900'
           }`
         }
       >
@@ -25,7 +24,7 @@ export function MobileBottomNav() {
       {/* Botón Catálogo */}
       <a
         href="#catalogo"
-        className="flex flex-col items-center gap-1 text-[11px] font-semibold text-gray-500 hover:text-green-700 transition-colors"
+        className="flex flex-col items-center gap-1 text-[10px] font-semibold text-gray-500 hover:text-green-700 transition-colors"
       >
         <Grid size={20} />
         <span>Catálogo</span>
@@ -35,8 +34,8 @@ export function MobileBottomNav() {
       <NavLink
         to="/carrito"
         className={({ isActive }) =>
-          `relative flex flex-col items-center gap-1 text-[11px] font-semibold transition-colors ${
-            isActive ? 'text-green-700 font-bold' : 'text-gray-500 hover:text-gray-900'
+          `relative flex flex-col items-center gap-1 text-[10px] font-semibold transition-colors ${
+            isActive ? 'text-green-700 font-extrabold' : 'text-gray-500 hover:text-gray-900'
           }`
         }
       >
@@ -45,7 +44,7 @@ export function MobileBottomNav() {
           {cartCount > 0 && (
             <span
               style={{ backgroundColor: '#E53935' }}
-              className="absolute -top-1.5 -right-2 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white animate-pulse"
+              className="absolute -top-1.5 -right-2 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white"
             >
               {cartCount}
             </span>
@@ -54,16 +53,31 @@ export function MobileBottomNav() {
         <span>Carrito</span>
       </NavLink>
 
-      {/* Botón WhatsApp */}
-      <a
-        href={COMPANY_INFO.whatsappLink}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex flex-col items-center gap-1 text-[11px] font-semibold text-green-600 hover:text-green-700 transition-colors"
+      {/* Botón Nosotros */}
+      <NavLink
+        to="/nosotros"
+        className={({ isActive }) =>
+          `flex flex-col items-center gap-1 text-[10px] font-semibold transition-colors ${
+            isActive ? 'text-green-700 font-extrabold' : 'text-gray-500 hover:text-gray-900'
+          }`
+        }
       >
-        <MessageCircle size={20} />
-        <span>WhatsApp</span>
-      </a>
+        <Info size={20} />
+        <span>Nosotros</span>
+      </NavLink>
+
+      {/* Botón FAQ */}
+      <NavLink
+        to="/faq"
+        className={({ isActive }) =>
+          `flex flex-col items-center gap-1 text-[10px] font-semibold transition-colors ${
+            isActive ? 'text-green-700 font-extrabold' : 'text-gray-500 hover:text-gray-900'
+          }`
+        }
+      >
+        <HelpCircle size={20} />
+        <span>Ayuda</span>
+      </NavLink>
     </div>
   );
 }

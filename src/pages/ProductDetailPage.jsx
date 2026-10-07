@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, ShoppingCart, Star, Truck, MessageCircle } from 'lucide-react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft, ShoppingCart, Star, Truck, Zap } from 'lucide-react';
 import { productService } from '../services/productService';
 import { useCart } from '../context/CartContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { ShareButton } from '../components/common/ShareButton';
-import { formatWhatsAppMessage } from '../utils/formatWhatsAppMessage';
 
 export function ProductDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { addToCart } = useCart();
   const { formatPrice, formatPriceDual, bcvRate } = useCurrency();
 
@@ -45,11 +45,9 @@ export function ProductDetailPage() {
     );
   }
 
-  const handleDirectWhatsAppBuy = () => {
-    const singleItemCart = [{ ...product, quantity }];
-    const total = product.price * quantity;
-    const url = formatWhatsAppMessage(singleItemCart, {}, total);
-    window.open(url, '_blank');
+  const handleDirectWebBuy = () => {
+    addToCart(product, quantity);
+    navigate('/carrito');
   };
 
   return (
@@ -174,12 +172,11 @@ export function ProductDetailPage() {
                 </button>
 
                 <button
-                  onClick={handleDirectWhatsAppBuy}
-                  style={{ backgroundColor: '#25D366' }}
-                  className="flex-1 hover:brightness-105 text-white font-bold text-xs md:text-sm py-3 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 min-h-[44px]"
+                  onClick={handleDirectWebBuy}
+                  className="flex-1 bg-gray-900 hover:bg-gray-800 text-white font-bold text-xs md:text-sm py-3 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 min-h-[44px]"
                 >
-                  <MessageCircle size={17} />
-                  <span>Comprar por WhatsApp</span>
+                  <Zap size={17} className="text-amber-400" />
+                  <span>Comprar Ahora (Ir al Carrito)</span>
                 </button>
               </div>
 

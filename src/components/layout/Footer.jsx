@@ -121,13 +121,21 @@ export function Footer() {
             </ul>
 
             {/* Accesos Directos a Páginas Clave */}
-            <div className="pt-2 border-t border-gray-800/80 flex flex-wrap gap-2 text-[11px]">
-              <Link to="/" className="text-gray-400 hover:text-white transition-colors">
-                🏠 Inicio
+            <div className="pt-2 border-t border-gray-800/80 flex flex-wrap gap-2.5 text-[11px]">
+              <Link to="/" className="text-gray-400 hover:text-green-400 transition-colors font-medium">
+                Inicio
               </Link>
               <span className="text-gray-700">•</span>
-              <Link to="/carrito" className="text-gray-400 hover:text-white transition-colors">
-                🛒 Mi Carrito
+              <Link to="/nosotros" className="text-gray-400 hover:text-green-400 transition-colors font-medium">
+                Nosotros
+              </Link>
+              <span className="text-gray-700">•</span>
+              <Link to="/faq" className="text-gray-400 hover:text-green-400 transition-colors font-medium">
+                Preguntas Frecuentes
+              </Link>
+              <span className="text-gray-700">•</span>
+              <Link to="/carrito" className="text-gray-400 hover:text-green-400 transition-colors font-medium">
+                Mi Carrito
               </Link>
             </div>
           </div>
@@ -175,8 +183,8 @@ export function Footer() {
           <p>© {new Date().getFullYear()} {COMPANY_INFO.name}. Todos los derechos reservados.</p>
           
           <div className="flex items-center gap-4">
-            <p className="flex items-center gap-1">
-              Hecho con <Heart size={12} className="text-red-500 fill-red-500" /> en Barinas, Venezuela.
+            <p className="flex items-center gap-1 font-medium text-gray-400">
+              Elaborada y diseñada por <span className="text-green-400 font-bold">Aldrin V.</span> - <span className="text-white font-bold">Rizz</span>
             </p>
 
             {/* Botón Volver Arriba */}

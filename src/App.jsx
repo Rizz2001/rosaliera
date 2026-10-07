@@ -9,6 +9,8 @@ import { HomePage } from './pages/HomePage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { CategoryPage } from './pages/CategoryPage';
 import { CartPage } from './pages/CartPage';
+import { AboutPage } from './pages/AboutPage';
+import { FaqPage } from './pages/FaqPage';
 
 function ToastContainer() {
   const { toastMessage } = useCart();
@@ -45,6 +47,8 @@ function AppContent() {
           <Route path="/producto/:id" element={<ProductDetailPage />} />
           <Route path="/categoria/:categorySlug" element={<CategoryPage />} />
           <Route path="/carrito" element={<CartPage />} />
+          <Route path="/nosotros" element={<AboutPage />} />
+          <Route path="/faq" element={<FaqPage />} />
         </Routes>
       </div>
 
