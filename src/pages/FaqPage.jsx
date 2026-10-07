@@ -5,10 +5,11 @@ import {
   Smartphone, Clock, Banknote, ShieldCheck, MessageCircle 
 } from 'lucide-react';
 import { useCurrency } from '../context/CurrencyContext';
-import { COMPANY_INFO } from '../config/constants';
+import { useCompany } from '../context/CompanyContext';
 
 export function FaqPage() {
   const { bcvRate } = useCurrency();
+  const { companyInfo } = useCompany();
   const [openIndex, setOpenIndex] = useState(0);
 
   const faqs = [
@@ -112,16 +113,18 @@ export function FaqPage() {
           <h3 className="text-sm font-bold text-gray-900">¿Tienes alguna duda adicional?</h3>
           <p className="text-xs text-gray-500">Nuestro equipo en Barinas está disponible para atenderte en tiempo real.</p>
           <div>
-            <a
-              href={COMPANY_INFO.whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ backgroundColor: '#25D366' }}
-              className="inline-flex items-center gap-2 hover:brightness-105 text-white text-xs font-bold px-5 py-3 rounded-xl shadow-md transition-all"
-            >
-              <MessageCircle size={16} />
-              <span>Consultar por WhatsApp</span>
-            </a>
+            {companyInfo.whatsappLink && (
+              <a
+                href={companyInfo.whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ backgroundColor: '#25D366' }}
+                className="inline-flex items-center gap-2 hover:brightness-105 text-white text-xs font-bold px-5 py-3 rounded-xl shadow-md transition-all"
+              >
+                <MessageCircle size={16} />
+                <span>Consultar por WhatsApp</span>
+              </a>
+            )}
           </div>
         </div>
 

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
+import { CompanyProvider } from './context/CompanyContext';
 import { CartProvider, useCart } from './context/CartContext';
 import { CurrencyProvider } from './context/CurrencyContext';
 import { AuthProvider } from './context/AuthContext';
+import { ProductProvider } from './context/ProductContext';
 import { ScrollToTop } from './components/common/ScrollToTop';
 import { Navbar } from './components/layout/Navbar';
 import { MobileBottomNav } from './components/layout/MobileBottomNav';
@@ -14,6 +16,7 @@ import { CartPage } from './pages/CartPage';
 import { AboutPage } from './pages/AboutPage';
 import { FaqPage } from './pages/FaqPage';
 import { LoginPage } from './pages/LoginPage';
+import { AdminPage } from './pages/AdminPage';
 
 function ToastContainer() {
   const { toastMessage } = useCart();
@@ -54,6 +57,7 @@ function AppContent() {
           <Route path="/nosotros" element={<AboutPage />} />
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </div>
 
@@ -67,13 +71,18 @@ function AppContent() {
 export default function App() {
   return (
     <HashRouter>
-      <AuthProvider>
-        <CurrencyProvider>
-          <CartProvider>
-            <AppContent />
-          </CartProvider>
-        </CurrencyProvider>
-      </AuthProvider>
+      <CompanyProvider>
+        <ProductProvider>
+          <AuthProvider>
+            <CurrencyProvider>
+              <CartProvider>
+                <AppContent />
+              </CartProvider>
+            </CurrencyProvider>
+          </AuthProvider>
+        </ProductProvider>
+      </CompanyProvider>
     </HashRouter>
   );
 }
+

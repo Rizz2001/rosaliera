@@ -7,7 +7,8 @@ import {
   Banknote, Landmark
 } from 'lucide-react';
 import { Logo } from '../common/Logo';
-import { COMPANY_INFO, PRODUCT_CATEGORIES } from '../../config/constants';
+import { useCompany } from '../../context/CompanyContext';
+import { PRODUCT_CATEGORIES } from '../../config/constants';
 
 const ICON_MAP = {
   Beef: Beef,
@@ -21,6 +22,8 @@ const ICON_MAP = {
 };
 
 export function Footer() {
+  const { companyInfo } = useCompany();
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -40,23 +43,26 @@ export function Footer() {
           <div className="space-y-4">
             <div>
               <Logo className="w-11 h-11" showText={true} dark={true} />
-              <p className="text-xs text-gray-400 mt-2 font-semibold">RIF: {COMPANY_INFO.rif}</p>
+              <p className="text-xs text-gray-400 mt-2 font-semibold">RIF: {companyInfo.rif}</p>
             </div>
             <p className="text-xs text-gray-400 leading-relaxed">
-              {COMPANY_INFO.tagline} Selección de carnes de primera, pollo fresco, quesos criollos, hortalizas y víveres directo a tu hogar en Alto Barinas.
+              {companyInfo.tagline} Selección de carnes de primera, pollo fresco, quesos criollos, hortalizas y víveres directo a tu hogar en Alto Barinas.
             </p>
-            <div>
-              <a
-                href={COMPANY_INFO.whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-green-600 hover:bg-green-500 text-white text-xs font-bold px-4 py-2.5 rounded-full transition-all inline-flex items-center gap-2 shadow-md hover:shadow-green-600/30 group"
-              >
-                <MessageCircle size={16} className="transition-transform group-hover:scale-110" />
-                <span>Atención por WhatsApp</span>
-              </a>
-            </div>
+            {companyInfo.whatsappLink && (
+              <div>
+                <a
+                  href={companyInfo.whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-green-600 hover:bg-green-500 text-white text-xs font-bold px-4 py-2.5 rounded-full transition-all inline-flex items-center gap-2 shadow-md hover:shadow-green-600/30 group"
+                >
+                  <MessageCircle size={16} className="transition-transform group-hover:scale-110" />
+                  <span>Atención por WhatsApp</span>
+                </a>
+              </div>
+            )}
           </div>
+
 
           {/* Columna 2: Categorías de Productos */}
           <div>
@@ -96,26 +102,26 @@ export function Footer() {
                   className="flex items-start gap-2.5 hover:text-green-400 transition-colors group"
                 >
                   <MapPin className="text-green-500 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" size={16} />
-                  <span>{COMPANY_INFO.address}, {COMPANY_INFO.city}</span>
+                  <span>{companyInfo.address}, {companyInfo.city}</span>
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
                 <Clock className="text-green-500 shrink-0" size={16} />
-                <span>{COMPANY_INFO.hours}</span>
+                <span>{companyInfo.hours}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="text-green-500 shrink-0" size={16} />
-                <span>{COMPANY_INFO.phone}</span>
+                <span>{companyInfo.phone}</span>
               </li>
               <li>
                 <a
-                  href="https://instagram.com/alimentoslarosaliera"
+                  href={`https://instagram.com/${companyInfo.instagram?.replace('@', '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2.5 hover:text-green-400 transition-colors"
                 >
                   <Instagram className="text-green-500 shrink-0" size={16} />
-                  <span>{COMPANY_INFO.instagram}</span>
+                  <span>{companyInfo.instagram}</span>
                 </a>
               </li>
             </ul>
@@ -136,6 +142,10 @@ export function Footer() {
               <span className="text-gray-700">•</span>
               <Link to="/carrito" className="text-gray-400 hover:text-green-400 transition-colors font-medium">
                 Mi Carrito
+              </Link>
+              <span className="text-gray-700">•</span>
+              <Link to="/admin" className="text-gray-400 hover:text-amber-400 transition-colors font-medium">
+                Panel Admin
               </Link>
             </div>
           </div>
@@ -180,7 +190,7 @@ export function Footer() {
 
         {/* Pie de Página Inferior (Copyright & Botón Subir) */}
         <div className="pt-6 border-t border-gray-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-          <p>© {new Date().getFullYear()} {COMPANY_INFO.name}. Todos los derechos reservados.</p>
+          <p>© {new Date().getFullYear()} {companyInfo.name}. Todos los derechos reservados.</p>
           
           <div className="flex items-center gap-4">
             <p className="flex items-center gap-1 font-medium text-gray-400">

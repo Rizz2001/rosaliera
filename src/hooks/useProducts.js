@@ -1,49 +1,25 @@
-/**
- * Custom Hook: useProducts
- * Permite a cualquier componente consultar productos con soporte de carga y filtrado.
- */
-
-import { useState, useEffect } from 'react';
-import { productService } from '../services/productService';
+import { useMemo } from 'react';
+import { useProductsContext } from '../context/ProductContext';
 
 export function useProducts(categoryFilter = 'todos', searchQuery = '') {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { products: allProducts } = useProductsContext();
 
-  useEffect(() => {
-    let isMounted = true;
-    setLoading(true);
+  const filteredProducts = useMemo(() => {
+    let result = allProducts;
 
-    const loadData = async () => {
-      try {
-        let result = [];
-        if (searchQuery.trim() !== '') {
-          result = await productService.searchProducts(searchQuery);
-        } else if (categoryFilter !== 'todos') {
-          result = await productService.getProductsByCategory(categoryFilter);
-        } else {
-          result = await productService.getAllProducts();
-        }
+    if (searchQuery && searchQuery.trim() !== '') {
+      const term = searchQuery.toLowerCase().trim();
+      result = result.filter(
+        p => p.name.toLowerCase().includes(term) ||
+             p.description.toLowerCase().includes(term) ||
+             (p.categoryName && p.categoryName.toLowerCase().includes(term))
+      );
+    } else if (categoryFilter && categoryFilter !== 'todos') {
+      result = result.filter(p => p.category === categoryFilter);
+    }
 
-        if (isMounted) {
-          setProducts(result);
-          setLoading(false);
-        }
-      } catch (err) {
-        if (isMounted) {
-          setError('Error al cargar inventario de productos');
-          setLoading(false);
-        }
-      }
-    };
+    return result;
+  }, [allProducts, categoryFilter, searchQuery]);
 
-    loadData();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [categoryFilter, searchQuery]);
-
-  return { products, loading, error };
+  return { products: filteredProducts, loading: false, error: null };
 }

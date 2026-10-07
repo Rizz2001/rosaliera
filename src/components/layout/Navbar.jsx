@@ -3,9 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, ShoppingBag, PhoneCall, MapPin, Instagram, Beef, Layers, Drumstick, Egg, Utensils, Apple, Wine, ChevronDown, User, LogOut, LogIn } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import { useCompany } from '../../context/CompanyContext';
 import { Logo } from '../common/Logo';
 import { CurrencyToggle } from '../common/CurrencyToggle';
-import { COMPANY_INFO, PRODUCT_CATEGORIES } from '../../config/constants';
+import { PRODUCT_CATEGORIES } from '../../config/constants';
 
 const ICON_MAP = {
   Beef: Beef,
@@ -21,6 +22,7 @@ const ICON_MAP = {
 export function Navbar({ searchQuery, setSearchQuery }) {
   const { cartCount } = useCart();
   const { user, isAuthenticated, logout } = useAuth();
+  const { companyInfo } = useCompany();
   const navigate = useNavigate();
   const [showMobileSearch, setShowMobileSearch] = useState(false);
 
@@ -42,33 +44,38 @@ export function Navbar({ searchQuery, setSearchQuery }) {
               <span className="truncate">Alto Barinas, Barinas</span>
               <ChevronDown size={11} className="shrink-0" />
             </button>
-            <span className="hidden sm:inline text-green-100">| Express {COMPANY_INFO.deliveryTime}</span>
+            <span className="hidden sm:inline text-green-100">| Express {companyInfo.deliveryTime || '30-45 min'}</span>
           </div>
 
           {/* Selector de Moneda Dual + Contacto */}
           <div className="flex items-center gap-3 text-[10px] sm:text-[11px] shrink-0">
             <CurrencyToggle />
 
-            <a 
-              href={COMPANY_INFO.whatsappLink} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hover:underline flex items-center gap-1 font-semibold hidden sm:flex"
-            >
-              <PhoneCall size={11} /> WhatsApp
-            </a>
-            <a 
-              href="https://instagram.com/alimentoslarosaliera" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hover:text-green-200 hidden sm:block"
-              aria-label="Instagram La Rosaliera"
-            >
-              <Instagram size={13} />
-            </a>
+            {companyInfo.whatsappLink && (
+              <a 
+                href={companyInfo.whatsappLink} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:underline flex items-center gap-1 font-semibold hidden sm:flex"
+              >
+                <PhoneCall size={11} /> WhatsApp
+              </a>
+            )}
+            {companyInfo.instagram && (
+              <a 
+                href={`https://instagram.com/${companyInfo.instagram.replace('@', '')}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-green-200 hidden sm:block font-medium"
+                aria-label="Instagram La Rosaliera"
+              >
+                <Instagram size={13} />
+              </a>
+            )}
           </div>
         </div>
       </div>
+
 
       {/* Main Header Navbar */}
       <div className="container mx-auto py-2.5 px-3 md:px-4 flex items-center justify-between gap-3">

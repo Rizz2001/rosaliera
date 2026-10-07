@@ -4,9 +4,10 @@ import {
   ArrowLeft, ShieldCheck, Heart, Award, Sparkles, 
   MapPin, Truck, CheckCircle2, Users, Building2 
 } from 'lucide-react';
-import { COMPANY_INFO } from '../config/constants';
+import { useCompany } from '../context/CompanyContext';
 
 export function AboutPage() {
+  const { companyInfo } = useCompany();
   const values = [
     {
       icon: ShieldCheck,
@@ -86,7 +87,7 @@ export function AboutPage() {
               </div>
               <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-full border border-white/10">
                 <Building2 size={14} className="text-amber-400" />
-                <span>RIF: {COMPANY_INFO.rif}</span>
+                <span>RIF: {companyInfo.rif}</span>
               </div>
             </div>
           </div>

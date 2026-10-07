@@ -1,49 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Sparkles, ArrowRight } from 'lucide-react';
+import { useCompany } from '../../context/CompanyContext';
 
 export function ImageBanner() {
+  const { banners } = useCompany();
+  const bannerSlides = banners && banners.length > 0 ? banners : [];
   const [currentIndex, setCurrentIndex] = useState(0);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
 
-  // Diapositivas de Banners Visuales de Alimentos La Rosaliera
-  const bannerSlides = [
-    {
-      id: 1,
-      title: '¡Frescura y Calidad Llanera!',
-      subtitle: 'Carnes de res de primera seleccionadas a diario en Barinas.',
-      badge: 'Cortes Premium',
-      image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1600',
-      ctaText: 'Ver Carnicería',
-      ctaCategory: 'carnes'
-    },
-    {
-      id: 2,
-      title: 'Quesos Llaneros y Lácteos Frescos',
-      subtitle: 'Queso duro, semiduro y crema de la mejor calidad tradicional.',
-      badge: '100% Artesanal',
-      image: 'https://images.unsplash.com/photo-1452195100486-9cc805987862?auto=format&fit=crop&q=80&w=1600',
-      ctaText: 'Explorar Lácteos',
-      ctaCategory: 'lacteos'
-    },
-    {
-      id: 3,
-      title: 'Combos Especiales La Rosaliera',
-      subtitle: 'Packs armados con todo lo que necesitas para tu hogar.',
-      badge: 'Mejor Precio',
-      image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=1600',
-      ctaText: 'Ver Promociones',
-      ctaCategory: 'combos'
+  // Resetear índice si los banners cambian o se eliminan
+  useEffect(() => {
+    if (currentIndex >= bannerSlides.length) {
+      setCurrentIndex(0);
     }
-  ];
+  }, [bannerSlides.length, currentIndex]);
 
   // Auto-rotación del Banner cada 5 segundos
   useEffect(() => {
+    if (bannerSlides.length === 0) return;
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % bannerSlides.length);
     }, 5000);
     return () => clearInterval(interval);
   }, [bannerSlides.length]);
+
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev === 0 ? bannerSlides.length - 1 : prev - 1));
