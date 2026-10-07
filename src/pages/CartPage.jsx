@@ -7,10 +7,12 @@ import {
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useCurrency } from '../context/CurrencyContext';
+import { useAuth } from '../context/AuthContext';
 
 export function CartPage() {
   const { cartItems, updateQuantity, removeFromCart, cartTotal, clearCart } = useCart();
   const { formatPrice, formatPriceDual, bcvRate } = useCurrency();
+  const { user } = useAuth();
 
   // Estado del Wizard por Pasos (1: Productos, 2: Entrega y Pago, 3: Confirmación Final)
   const [currentStep, setCurrentStep] = useState(1);
@@ -18,11 +20,11 @@ export function CartPage() {
   const [orderInfo, setOrderInfo] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  // Estado del Formulario de Entrega
+  // Estado del Formulario de Entrega (Auto-completado si hay sesión activa)
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    address: 'Alto Barinas, Barinas',
+    name: user?.name || '',
+    phone: user?.phone || '',
+    address: user?.address || 'Alto Barinas, Barinas',
     paymentMethod: 'Pago Móvil',
     notes: ''
   });

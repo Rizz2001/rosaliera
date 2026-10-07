@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { CartProvider, useCart } from './context/CartContext';
 import { CurrencyProvider } from './context/CurrencyContext';
+import { AuthProvider } from './context/AuthContext';
+import { ScrollToTop } from './components/common/ScrollToTop';
 import { Navbar } from './components/layout/Navbar';
 import { MobileBottomNav } from './components/layout/MobileBottomNav';
 import { Footer } from './components/layout/Footer';
@@ -11,6 +13,7 @@ import { CategoryPage } from './pages/CategoryPage';
 import { CartPage } from './pages/CartPage';
 import { AboutPage } from './pages/AboutPage';
 import { FaqPage } from './pages/FaqPage';
+import { LoginPage } from './pages/LoginPage';
 
 function ToastContainer() {
   const { toastMessage } = useCart();
@@ -30,6 +33,7 @@ function AppContent() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50/50">
+      <ScrollToTop />
       <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       
       <div className="flex-1">
@@ -49,6 +53,7 @@ function AppContent() {
           <Route path="/carrito" element={<CartPage />} />
           <Route path="/nosotros" element={<AboutPage />} />
           <Route path="/faq" element={<FaqPage />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </div>
 
@@ -62,11 +67,13 @@ function AppContent() {
 export default function App() {
   return (
     <HashRouter>
-      <CurrencyProvider>
-        <CartProvider>
-          <AppContent />
-        </CartProvider>
-      </CurrencyProvider>
+      <AuthProvider>
+        <CurrencyProvider>
+          <CartProvider>
+            <AppContent />
+          </CartProvider>
+        </CurrencyProvider>
+      </AuthProvider>
     </HashRouter>
   );
 }

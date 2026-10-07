@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ShoppingBag, PhoneCall, MapPin, Instagram, Beef, Layers, Drumstick, Egg, Utensils, Apple, Wine, ChevronDown } from 'lucide-react';
+import { Search, ShoppingBag, PhoneCall, MapPin, Instagram, Beef, Layers, Drumstick, Egg, Utensils, Apple, Wine, ChevronDown, User, LogOut, LogIn } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import { Logo } from '../common/Logo';
 import { CurrencyToggle } from '../common/CurrencyToggle';
 import { COMPANY_INFO, PRODUCT_CATEGORIES } from '../../config/constants';
@@ -19,6 +20,7 @@ const ICON_MAP = {
 
 export function Navbar({ searchQuery, setSearchQuery }) {
   const { cartCount } = useCart();
+  const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const [showMobileSearch, setShowMobileSearch] = useState(false);
 
@@ -100,16 +102,30 @@ export function Navbar({ searchQuery, setSearchQuery }) {
             <Search size={18} />
           </button>
 
-          {/* Botón WhatsApp Desktop */}
-          <a
-            href={COMPANY_INFO.whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden lg:flex items-center gap-2 bg-green-50 hover:bg-green-100 text-green-700 font-bold text-xs px-3.5 py-2 rounded-full border border-green-200 transition-all"
-          >
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            WhatsApp
-          </a>
+          {/* Estado de Usuario (Sesión) */}
+          {isAuthenticated ? (
+            <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-full text-xs font-semibold">
+              <User size={15} className="text-green-700" />
+              <span className="hidden sm:inline text-gray-800 font-bold truncate max-w-[110px]">
+                {user?.name || 'Mi Cuenta'}
+              </span>
+              <button
+                onClick={logout}
+                title="Cerrar Sesión"
+                className="text-gray-400 hover:text-red-600 transition-colors ml-1"
+              >
+                <LogOut size={14} />
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold px-3 py-2 rounded-full border border-gray-200 transition-all shrink-0"
+            >
+              <LogIn size={15} className="text-green-700" />
+              <span className="hidden sm:inline">Ingresar</span>
+            </Link>
+          )}
 
           {/* Botón Carrito (/carrito) */}
           <Link

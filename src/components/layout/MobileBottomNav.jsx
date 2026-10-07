@@ -1,10 +1,26 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { Home, Grid, ShoppingBag, Info, HelpCircle } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
 export function MobileBottomNav() {
   const { cartCount } = useCart();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleGoToCatalogue = (e) => {
+    e.preventDefault();
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const el = document.getElementById('catalogo');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      const el = document.getElementById('catalogo');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-200 px-3 py-2 flex items-center justify-around shadow-lg">
@@ -22,13 +38,14 @@ export function MobileBottomNav() {
       </NavLink>
 
       {/* Botón Catálogo */}
-      <a
-        href="#catalogo"
+      <button
+        type="button"
+        onClick={handleGoToCatalogue}
         className="flex flex-col items-center gap-1 text-[10px] font-semibold text-gray-500 hover:text-green-700 transition-colors"
       >
         <Grid size={20} />
         <span>Catálogo</span>
-      </a>
+      </button>
 
       {/* Botón Carrito Página Propia (/carrito) */}
       <NavLink
