@@ -1,0 +1,47 @@
+/* Variables de Diseño y Tokens - Alimentos La Rosaliera */
+:root {
+  /* Paleta de Colores de Marca */
+  --color-primary: #58A618;
+  --color-primary-hover: #468612;
+  --color-primary-dark: #37680D;
+  --color-accent: #7CC12A;
+  --color-accent-light: #EBF7DF;
+  --color-mint-bg: #F4F9F1;
+  
+  /* Colores de Badges y Alertas */
+  --color-badge-red: #E53935;
+  --color-badge-red-light: #FFEBEE;
+  --color-badge-gold: #FFB300;
+  --color-badge-gold-light: #FFF8E1;
+
+  /* Superficies y Fondos */
+  --color-bg-body: #F8FAF7;
+  --color-surface-white: #FFFFFF;
+  --color-surface-card: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-border-light: #EDF2F7;
+
+  /* Tipografía */
+  --font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+  --color-text-main: #1F2937;
+  --color-text-muted: #6B7280;
+  --color-text-light: #9CA3AF;
+
+  /* Sombras y Elevaciones */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 6px 16px rgba(88, 166, 24, 0.08);
+  --shadow-lg: 0 12px 32px rgba(88, 166, 24, 0.12);
+  --shadow-hover: 0 20px 40px rgba(88, 166, 24, 0.18);
+  --shadow-drawer: -10px 0 40px rgba(0, 0, 0, 0.15);
+
+  /* Transiciones */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Radios de borde */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+}

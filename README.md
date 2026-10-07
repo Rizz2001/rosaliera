@@ -1,2 +1,0 @@
-# rosaliera
-web esqueleton
