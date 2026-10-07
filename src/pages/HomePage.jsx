@@ -2,7 +2,7 @@ import React from 'react';
 import { HeroSlider } from '../components/home/HeroSlider';
 import { CategoryBubbles } from '../components/home/CategoryBubbles';
 import { TrustBadges } from '../components/home/TrustBadges';
-import { PromoBanner } from '../components/home/PromoBanner';
+import { ImageBanner } from '../components/home/ImageBanner';
 import { ProductGrid } from '../components/product/ProductGrid';
 import { useProducts } from '../hooks/useProducts';
 
@@ -23,8 +23,8 @@ export function HomePage({ selectedCategory, onSelectCategory, searchQuery }) {
       {/* Franja de Confianza e Insignias */}
       <TrustBadges />
 
-      {/* Banner Promocional de Combos Especiales */}
-      <PromoBanner onSelectCategory={onSelectCategory} />
+      {/* Banner de Imágenes Promocionales (Galería Rotativa) */}
+      <ImageBanner />
 
       {/* Catálogo de Productos Filtable */}
       <ProductGrid

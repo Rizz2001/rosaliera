@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { CartProvider, useCart } from './context/CartContext';
 import { CurrencyProvider } from './context/CurrencyContext';
-import { TopRibbon } from './components/layout/TopRibbon';
 import { Navbar } from './components/layout/Navbar';
 import { MobileBottomNav } from './components/layout/MobileBottomNav';
 import { Footer } from './components/layout/Footer';
@@ -29,7 +28,6 @@ function AppContent() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50/50">
-      <TopRibbon />
       <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       
       <div className="flex-1">
