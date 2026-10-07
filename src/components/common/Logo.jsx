@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function Logo({ className = "w-12 h-12", showText = true }) {
+export function Logo({ className = "w-12 h-12", showText = true, dark = false }) {
   return (
     <div className="flex items-center gap-2.5">
       {/* Insignia Circular Serrada Oficial La Rosaliera */}
@@ -48,19 +48,13 @@ export function Logo({ className = "w-12 h-12", showText = true }) {
 
         {/* Ilustración Siluetas Ganaderas (Vaca, Cerdo, Pollo y Trigo) */}
         <g fill="none" stroke="#58A618" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-          {/* Silueta Cabeza Vaca */}
           <path d="M 65 82 C 65 65, 105 60, 125 72 C 145 84, 140 110, 120 120 C 105 125, 80 120, 65 100 Z" />
-          {/* Cuernos de Vaca */}
           <path d="M 75 66 C 70 55, 60 52, 55 58" />
           <path d="M 125 70 C 135 60, 145 60, 150 65" />
 
-          {/* Silueta Cerdo */}
           <path d="M 70 108 C 65 118, 85 130, 110 128 C 125 126, 130 118, 120 112" />
-
-          {/* Silueta Pollo */}
           <path d="M 78 125 C 75 135, 90 145, 102 142" />
 
-          {/* Espiga de Trigo / Ramillete */}
           <path d="M 52 125 C 50 100, 58 75, 76 60" strokeWidth="4" />
           <path d="M 54 110 C 46 106, 46 98, 56 96" />
           <path d="M 60 92 C 52 88, 52 80, 62 78" />
@@ -84,13 +78,13 @@ export function Logo({ className = "w-12 h-12", showText = true }) {
         </text>
       </svg>
 
-      {/* Texto de Marca */}
+      {/* Texto de Marca Adaptable a Fondo Oscuro o Claro */}
       {showText && (
         <div className="flex flex-col">
-          <span className="text-base md:text-lg font-extrabold text-gray-900 tracking-tight leading-none">
+          <span className={`text-base md:text-lg font-extrabold tracking-tight leading-none ${dark ? 'text-white' : 'text-gray-900'}`}>
             Alimentos <span style={{ color: '#58A618' }}>La Rosaliera</span>
           </span>
-          <span className="text-[11px] font-semibold text-gray-500 tracking-tight mt-0.5">
+          <span className={`text-[11px] font-semibold tracking-tight mt-0.5 ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
             ¡Frescura del campo a tu mesa!
           </span>
         </div>
