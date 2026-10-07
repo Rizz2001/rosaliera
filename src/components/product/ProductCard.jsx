@@ -2,11 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Star, Eye, Plus, Minus } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useCurrency } from '../../context/CurrencyContext';
 import { ShareButton } from '../common/ShareButton';
-import { formatCurrency } from '../../utils/formatCurrency';
 
 export function ProductCard({ product }) {
   const { cartItems, addToCart, updateQuantity } = useCart();
+  const { formatPrice } = useCurrency();
 
   const cartItem = cartItems.find(item => item.id === product.id);
   const currentQuantity = cartItem ? cartItem.quantity : 0;
@@ -66,17 +67,17 @@ export function ProductCard({ product }) {
         </div>
 
         <div>
-          {/* Precio y Unidad */}
+          {/* Precio y Unidad Formateado Dinámicamente ($ USD / Bs. BCV) */}
           <div className="flex items-baseline justify-between mb-3 pt-2 border-t border-gray-50">
             <div>
               <span className="text-lg font-extrabold text-gray-900">
-                {formatCurrency(product.price)}
+                {formatPrice(product.price)}
               </span>
               <span className="text-xs text-gray-500 font-medium"> / {product.unit}</span>
             </div>
             {product.originalPrice && (
               <span className="text-xs text-gray-400 line-through">
-                {formatCurrency(product.originalPrice)}
+                {formatPrice(product.originalPrice)}
               </span>
             )}
           </div>
@@ -113,7 +114,7 @@ export function ProductCard({ product }) {
             <ShareButton
               title={product.name}
               text={`¡Mira este producto fresco en Alimentos La Rosaliera: ${product.name}!`}
-              url={`${window.location.origin}/producto/${product.id}`}
+              url={`${window.location.origin}/#/producto/${product.id}`}
             />
           </div>
         </div>

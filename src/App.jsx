@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { CartProvider, useCart } from './context/CartContext';
+import { CurrencyProvider } from './context/CurrencyContext';
 import { Navbar } from './components/layout/Navbar';
 import { MobileBottomNav } from './components/layout/MobileBottomNav';
 import { Footer } from './components/layout/Footer';
@@ -57,9 +58,11 @@ function AppContent() {
 export default function App() {
   return (
     <HashRouter>
-      <CartProvider>
-        <AppContent />
-      </CartProvider>
+      <CurrencyProvider>
+        <CartProvider>
+          <AppContent />
+        </CartProvider>
+      </CurrencyProvider>
     </HashRouter>
   );
 }

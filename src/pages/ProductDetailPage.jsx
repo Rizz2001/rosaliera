@@ -3,13 +3,14 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, Star, Truck, MessageCircle } from 'lucide-react';
 import { productService } from '../services/productService';
 import { useCart } from '../context/CartContext';
+import { useCurrency } from '../context/CurrencyContext';
 import { ShareButton } from '../components/common/ShareButton';
-import { formatCurrency } from '../utils/formatCurrency';
 import { formatWhatsAppMessage } from '../utils/formatWhatsAppMessage';
 
 export function ProductDetailPage() {
   const { id } = useParams();
   const { addToCart } = useCart();
+  const { formatPrice, formatPriceDual, bcvRate } = useCurrency();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -113,40 +114,50 @@ export function ProductDetailPage() {
                 </div>
               )}
 
-              {/* Precios */}
-              <div className="flex items-baseline gap-2 mb-4">
-                <span className="text-2xl md:text-4xl font-black text-gray-900">
-                  {formatCurrency(product.price)}
-                </span>
-                <span className="text-xs text-gray-500 font-semibold">/ {product.unit}</span>
-                {product.originalPrice && (
-                  <span className="text-xs text-gray-400 line-through">
-                    {formatCurrency(product.originalPrice)}
+              {/* Precios con Conversor Dual */}
+              <div className="mb-4">
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <span className="text-2xl md:text-4xl font-black text-gray-900">
+                    {formatPrice(product.price)}
                   </span>
-                )}
+                  <span className="text-xs text-gray-500 font-semibold">/ {product.unit}</span>
+                  {product.originalPrice && (
+                    <span className="text-xs text-gray-400 line-through ml-2">
+                      {formatPrice(product.originalPrice)}
+                    </span>
+                  )}
+                </div>
+                <div className="text-xs text-green-700 font-semibold mt-1 flex items-center gap-1">
+                  <span>Equivalencia Dual BCV: {formatPriceDual(product.price)}</span>
+                </div>
               </div>
 
               {/* Selector de Cantidad */}
-              <div className="flex flex-wrap items-center gap-3 mb-6">
+              <div className="flex flex-wrap items-center gap-3 mb-6 bg-gray-50 p-3 rounded-2xl border border-gray-100">
                 <span className="text-xs font-bold text-gray-700">Cantidad ({product.unit}):</span>
-                <div className="flex items-center border border-gray-300 rounded-xl bg-gray-50 p-0.5">
+                <div className="flex items-center border border-gray-300 rounded-xl bg-white p-0.5 shadow-2xs">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-8 h-8 flex items-center justify-center font-bold text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+                    className="w-8 h-8 flex items-center justify-center font-bold text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                   >
                     -
                   </button>
                   <span className="px-3 text-xs font-bold text-gray-900">{quantity}</span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-8 h-8 flex items-center justify-center font-bold text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+                    className="w-8 h-8 flex items-center justify-center font-bold text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                   >
                     +
                   </button>
                 </div>
-                <span className="text-xs text-green-700 font-extrabold ml-auto sm:ml-0">
-                  Total: {formatCurrency(product.price * quantity)}
-                </span>
+                <div className="ml-auto sm:ml-0 text-right">
+                  <span className="text-xs text-green-700 font-extrabold block">
+                    Total: {formatPrice(product.price * quantity)}
+                  </span>
+                  <span className="text-[10px] text-gray-500 font-medium block">
+                    ({formatPriceDual(product.price * quantity)})
+                  </span>
+                </div>
               </div>
             </div>
 

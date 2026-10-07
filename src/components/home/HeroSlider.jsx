@@ -1,10 +1,12 @@
 import React from 'react';
 import { ArrowRight, Flame, Sparkles, ShoppingCart, Star } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useCurrency } from '../../context/CurrencyContext';
 import { MOCK_PRODUCTS } from '../../data/mockProducts';
 
 export function HeroSlider() {
   const { addToCart } = useCart();
+  const { formatPrice } = useCurrency();
 
   const mainProduct = MOCK_PRODUCTS[0]; // Solomo de Cuerito
   const secondary1 = MOCK_PRODUCTS[3];   // Queso Blanco
@@ -42,9 +44,9 @@ export function HeroSlider() {
               <div>
                 <span className="text-xs text-gray-400 block font-medium">Precio por {mainProduct.unit}</span>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-extrabold text-green-400">${mainProduct.price.toFixed(2)}</span>
+                  <span className="text-3xl font-extrabold text-green-400">{formatPrice(mainProduct.price)}</span>
                   {mainProduct.originalPrice && (
-                    <span className="text-sm text-gray-400 line-through">${mainProduct.originalPrice.toFixed(2)}</span>
+                    <span className="text-sm text-gray-400 line-through">{formatPrice(mainProduct.originalPrice)}</span>
                   )}
                 </div>
               </div>
@@ -88,7 +90,7 @@ export function HeroSlider() {
               <span className="bg-yellow-400 text-gray-900 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full">
                 Más Vendido
               </span>
-              <span className="text-lg font-bold text-yellow-300">${secondary1.price.toFixed(2)} / {secondary1.unit}</span>
+              <span className="text-lg font-bold text-yellow-300">{formatPrice(secondary1.price)} / {secondary1.unit}</span>
             </div>
             <div className="relative z-10 my-2">
               <h3 className="text-lg font-bold text-white mb-1">{secondary1.name}</h3>
@@ -112,7 +114,7 @@ export function HeroSlider() {
               <span className="bg-emerald-500 text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full">
                 Frescura 100%
               </span>
-              <span className="text-lg font-bold text-emerald-300">${secondary2.price.toFixed(2)} / {secondary2.unit}</span>
+              <span className="text-lg font-bold text-emerald-300">{formatPrice(secondary2.price)} / {secondary2.unit}</span>
             </div>
             <div className="relative z-10 my-2">
               <h3 className="text-lg font-bold text-white mb-1">{secondary2.name}</h3>

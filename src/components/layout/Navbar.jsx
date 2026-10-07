@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, ShoppingBag, PhoneCall, MapPin, Instagram, Beef, Layers, Drumstick, Egg, Utensils, Apple, Wine, ChevronDown } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { Logo } from '../common/Logo';
+import { CurrencyToggle } from '../common/CurrencyToggle';
 import { COMPANY_INFO, PRODUCT_CATEGORIES } from '../../config/constants';
 
 const ICON_MAP = {
@@ -29,9 +30,10 @@ export function Navbar({ searchQuery, setSearchQuery }) {
   return (
     <header className="sticky top-0 z-40 bg-white shadow-2xs border-b border-gray-100">
       
-      {/* Top Bar Informativa (Optimizada para Móviles) */}
+      {/* Top Bar Informativa con Selector Dual de Moneda ($ USD / Bs. BCV) */}
       <div style={{ backgroundColor: '#58A618' }} className="text-white text-[11px] py-1.5 px-3 md:px-4">
-        <div className="container mx-auto flex flex-wrap justify-between items-center gap-1.5">
+        <div className="container mx-auto flex flex-wrap justify-between items-center gap-2">
+          {/* Ubicación y Despacho Express */}
           <div className="flex items-center gap-2 sm:gap-4 truncate">
             <button className="flex items-center gap-1 font-bold hover:text-green-100 transition-colors truncate">
               <MapPin size={13} className="shrink-0" />
@@ -41,12 +43,15 @@ export function Navbar({ searchQuery, setSearchQuery }) {
             <span className="hidden sm:inline text-green-100">| Express {COMPANY_INFO.deliveryTime}</span>
           </div>
 
+          {/* Selector de Moneda Dual + Contacto */}
           <div className="flex items-center gap-3 text-[10px] sm:text-[11px] shrink-0">
+            <CurrencyToggle />
+
             <a 
               href={COMPANY_INFO.whatsappLink} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="hover:underline flex items-center gap-1 font-semibold"
+              className="hover:underline flex items-center gap-1 font-semibold hidden sm:flex"
             >
               <PhoneCall size={11} /> WhatsApp
             </a>
@@ -54,7 +59,7 @@ export function Navbar({ searchQuery, setSearchQuery }) {
               href="https://instagram.com/alimentoslarosaliera" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="hover:text-green-200"
+              className="hover:text-green-200 hidden sm:block"
               aria-label="Instagram La Rosaliera"
             >
               <Instagram size={13} />

@@ -6,11 +6,12 @@ import {
   User, Phone, FileText, Check, Smartphone, Landmark, Banknote, Edit2
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { formatCurrency } from '../utils/formatCurrency';
+import { useCurrency } from '../context/CurrencyContext';
 import { formatWhatsAppMessage } from '../utils/formatWhatsAppMessage';
 
 export function CartPage() {
   const { cartItems, updateQuantity, removeFromCart, cartTotal, clearCart } = useCart();
+  const { formatPrice, formatPriceDual, bcvRate } = useCurrency();
 
   // Estado del Wizard por Pasos (1: Productos, 2: Entrega y Pago, 3: Confirmación Final)
   const [currentStep, setCurrentStep] = useState(1);
@@ -78,7 +79,7 @@ export function CartPage() {
     {
       id: 'Pago Móvil',
       title: 'Pago Móvil',
-      desc: 'Bs. Tasa Oficial BCV',
+      desc: `Bs. BCV (${bcvRate.toFixed(2)} Bs/$)`,
       badge: 'Más rápido',
       icon: Smartphone
     },
@@ -217,7 +218,7 @@ export function CartPage() {
                 <p className="text-xs text-white">
                   {isFreeShipping
                     ? '🎉 ¡Felicidades! Tu pedido califica para ENVÍO GRATIS a domicilio.'
-                    : `Agrega ${formatCurrency(remainingForFreeShipping)} más para obtener Envío GRATIS (Superando ${formatCurrency(freeShippingThreshold)}).`}
+                    : `Agrega ${formatPrice(remainingForFreeShipping)} más para obtener Envío GRATIS (Superando ${formatPrice(freeShippingThreshold)}).`}
                 </p>
               </div>
             </div>
@@ -296,7 +297,7 @@ export function CartPage() {
                               </span>
                               <h3 className="text-sm font-bold text-gray-900 mt-1 line-clamp-1">{item.name}</h3>
                               <p className="text-xs text-gray-500 font-medium">
-                                {formatCurrency(item.price)} por {item.unit}
+                                {formatPrice(item.price)} por {item.unit}
                               </p>
                             </div>
                           </div>
@@ -320,9 +321,12 @@ export function CartPage() {
                               </button>
                             </div>
 
-                            <div className="text-right min-w-[85px]">
+                            <div className="text-right min-w-[95px]">
                               <span className="text-sm font-extrabold text-gray-900 block">
-                                {formatCurrency(item.price * item.quantity)}
+                                {formatPrice(item.price * item.quantity)}
+                              </span>
+                              <span className="text-[10px] text-gray-400 font-medium block">
+                                {formatPriceDual(item.price * item.quantity)}
                               </span>
                             </div>
 
@@ -380,26 +384,31 @@ export function CartPage() {
                   <div className="space-y-2 text-xs pt-2 border-t border-gray-100">
                     <div className="flex justify-between text-gray-600">
                       <span>Subtotal ({cartItems.length} rubros)</span>
-                      <span className="font-semibold text-gray-900">{formatCurrency(cartTotal)}</span>
+                      <span className="font-semibold text-gray-900">{formatPrice(cartTotal)}</span>
                     </div>
 
                     {discount > 0 && (
                       <div className="flex justify-between text-green-700 font-bold">
                         <span>Descuento Promocional</span>
-                        <span>-{formatCurrency(discount)}</span>
+                        <span>-{formatPrice(discount)}</span>
                       </div>
                     )}
 
                     <div className="flex justify-between text-gray-600">
                       <span>Despacho Estimado</span>
                       <span className="font-semibold text-green-700">
-                        {isFreeShipping ? 'GRATIS' : '$2.00'}
+                        {isFreeShipping ? 'GRATIS' : formatPrice(2.00)}
                       </span>
                     </div>
 
-                    <div className="flex justify-between text-base font-black text-gray-900 pt-3 border-t border-gray-200">
-                      <span>Subtotal Estimado</span>
-                      <span className="text-green-700 text-xl">{formatCurrency(grandTotal)}</span>
+                    <div className="pt-3 border-t border-gray-200">
+                      <div className="flex justify-between text-base font-black text-gray-900">
+                        <span>Subtotal Estimado</span>
+                        <span className="text-green-700 text-xl">{formatPrice(grandTotal)}</span>
+                      </div>
+                      <div className="text-right text-[11px] text-gray-500 font-semibold mt-0.5">
+                        Dual BCV: {formatPriceDual(grandTotal)}
+                      </div>
                     </div>
                   </div>
 
@@ -566,19 +575,24 @@ export function CartPage() {
                   <div className="space-y-2 text-xs">
                     <div className="flex justify-between text-gray-600">
                       <span>Total Productos ({cartItems.length})</span>
-                      <span className="font-semibold text-gray-900">{formatCurrency(cartTotal)}</span>
+                      <span className="font-semibold text-gray-900">{formatPrice(cartTotal)}</span>
                     </div>
 
                     <div className="flex justify-between text-gray-600">
                       <span>Despacho en Barinas</span>
                       <span className="font-semibold text-green-700">
-                        {isFreeShipping ? 'GRATIS' : '$2.00'}
+                        {isFreeShipping ? 'GRATIS' : formatPrice(2.00)}
                       </span>
                     </div>
 
-                    <div className="flex justify-between text-base font-black text-gray-900 pt-3 border-t border-gray-200">
-                      <span>Total a Pagar</span>
-                      <span className="text-green-700 text-2xl">{formatCurrency(grandTotal)}</span>
+                    <div className="pt-3 border-t border-gray-200">
+                      <div className="flex justify-between text-base font-black text-gray-900">
+                        <span>Total a Pagar</span>
+                        <span className="text-green-700 text-2xl">{formatPrice(grandTotal)}</span>
+                      </div>
+                      <div className="text-right text-[11px] text-gray-500 font-semibold mt-0.5">
+                        Dual BCV: {formatPriceDual(grandTotal)}
+                      </div>
                     </div>
                   </div>
 
@@ -667,17 +681,21 @@ export function CartPage() {
                             <span className="font-bold text-green-700">{item.quantity}x</span>
                             <span className="font-semibold text-gray-800">{item.name}</span>
                           </div>
-                          <span className="font-extrabold text-gray-900">{formatCurrency(item.price * item.quantity)}</span>
+                          <div className="text-right">
+                            <span className="font-extrabold text-gray-900 block">{formatPrice(item.price * item.quantity)}</span>
+                            <span className="text-[10px] text-gray-400 font-medium block">{formatPriceDual(item.price * item.quantity)}</span>
+                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
 
                   {/* Desglose de Pago Final */}
-                  <div className="bg-green-50 p-4 rounded-2xl border border-green-200 flex items-center justify-between text-xs">
+                  <div className="bg-green-50 p-4 rounded-2xl border border-green-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
                     <div>
-                      <span className="text-green-800 font-bold block">TOTAL FINAL A PAGAR:</span>
-                      <span className="text-2xl font-black text-green-800">{formatCurrency(grandTotal)}</span>
+                      <span className="text-green-800 font-bold block text-[10px] uppercase">TOTAL FINAL A PAGAR:</span>
+                      <span className="text-2xl font-black text-green-800 block">{formatPrice(grandTotal)}</span>
+                      <span className="text-xs font-semibold text-green-700 block">Equivalente Dual: {formatPriceDual(grandTotal)}</span>
                     </div>
                     <span className="bg-white text-green-800 text-xs font-extrabold px-3 py-1.5 rounded-full shadow-2xs border border-green-300">
                       Despacho Express Incluido
